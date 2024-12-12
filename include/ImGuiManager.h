@@ -6,10 +6,6 @@
 
 class ImGuiManager {
 public:
-    //explicit ImGuiManager();
-    //~ImGuiManager();
-
-    // Pobieranie instancji Singletona
     static ImGuiManager& getInstance() {
         static ImGuiManager instance;
         return instance;
@@ -17,26 +13,37 @@ public:
 
     void DrawMainWindow(sf::RenderWindow& window);
 
-    // Funkcja inicjalizacji ImGui
-    void initialize(sf::RenderWindow& window) {
-        ImGui::SFML::Init(window);
-        imguiThemes::green();
-
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        io.FontGlobalScale = 2.f;
-
-        ImGuiStyle& style = ImGui::GetStyle();
-        style.Colors[ImGuiCol_WindowBg].w = 0.5f;
+    void ToggleWindow() {
+        mainWindowShow = !mainWindowShow;
     }
 
-    // Funkcja obs³ugi ImGui
+    void initialize(sf::RenderWindow& window) {
+        ImGui::SFML::Init(window, false);
+        
+        imguiThemes::green();
+        ImGuiIO& io = ImGui::GetIO(); (void)io;
+        io.Fonts->Clear();
+        io.Fonts->AddFontFromFileTTF(RESOURCES_PATH "fonts/imgui_regular.ttf", 24.f);
+        io.FontAllowUserScaling = true;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        io.ConfigFlags |= ImGuiWindowFlags_NoBackground;
+        io.FontGlobalScale = 0.8f;
+
+        ImGui::SFML::UpdateFontTexture();
+
+        ImGuiStyle& style = ImGui::GetStyle();
+        style.AntiAliasedFill = true;
+        style.AntiAliasedLines = true;
+        style.AntiAliasedLinesUseTex = true;
+        
+        style.Colors[ImGuiCol_WindowBg].w = 0.f;
+    }
+
     void render(sf::RenderWindow& window) {
         ImGui::SFML::Render(window);
     }
 
-    // Aktualizacja logiki ImGui
     void update(sf::RenderWindow& window, sf::Time deltaTime) {
         ImGui::SFML::Update(window, deltaTime);
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
@@ -46,7 +53,6 @@ public:
         ImGui::SFML::ProcessEvent(window, event);
     }
 
-    // Zakoñczenie ImGui
     void shutdown() {
         ImGui::SFML::Shutdown();
     }
@@ -57,9 +63,10 @@ public:
 private:
     int maxFPS = 144;
     bool vsync = true;
+    bool mainWindowShow = true;
 
 private:
-    ImGuiManager() = default; // Konstruktor prywatny
+    ImGuiManager() = default;
     ~ImGuiManager() = default;
 
     ImGuiManager(const ImGuiManager&) = delete;

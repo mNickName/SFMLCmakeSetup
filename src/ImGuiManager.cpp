@@ -2,7 +2,7 @@
 
 void ImGuiManager::DrawMainWindow(sf::RenderWindow& window)
 {
-	ImGui::Begin("2DE");
+	ImGui::Begin("2DE", &mainWindowShow);
 
 	ImGui::Text("FPS: %.1f", fps);
 

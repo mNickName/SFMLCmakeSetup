@@ -4,24 +4,19 @@
 
 #include "ImGuiManager.h"
 #include "Animation.h"
+#include "Objects/GameObject.cpp"
+#include "Spawnables/Player.cpp"
 
 int main() {
 	sf::RenderWindow window(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "2DEngine", sf::Style::Close | sf::Style::Resize | sf::Style::Fullscreen);
 	
-	sf::RectangleShape debug(sf::Vector2f(32.0f, 32.0f));
-	debug.setPosition(256, 256);
-	debug.setFillColor(sf::Color::Black);
-	debug.setOutlineColor(sf::Color::White);
-	debug.setOutlineThickness(2.0f);
+	// Create Player Object
+	Player player(RESOURCES_PATH "Knight/idle.png", sf::Vector2f(100.f, 100.f));
 
-	sf::RectangleShape player(sf::Vector2f(32.0f, 32.0f));
-	player.setPosition(256, 256);
+	//sf::RectangleShape player(sf::Vector2f(32.0f * 4, 32.0f * 4));
+	//player.setPosition(256, 256);
 
-	sf::Texture playerTexture;
-	playerTexture.loadFromFile(RESOURCES_PATH "Knight/idle.png");
-	player.setTexture(&playerTexture);
-
-	Animation animation(&playerTexture, sf::Vector2u(11, 0), 1.0f);
+	//Animation animation(&playerTexture, sf::Vector2u(11, 1), 0.1f);
 
 	float deltaTime = 0.0f;
 	sf::Clock clock;
@@ -58,15 +53,16 @@ int main() {
 			}
 		}
 
+		//for (auto& obj : gameObjects)
+		player.update(deltaTime);
 		gui.update(window, deltaRestart);
 
-		animation.Update(0, deltaTime);
-		player.setTextureRect(animation.uvRect);
+		//animation.Update(0, deltaTime);
+		//player.setTextureRect(animation.uvRect);
 
 		window.clear();
-		window.draw(debug);
-		window.draw(player);
 
+		player.draw(window);
 		gui.DrawMainWindow(window);
 		gui.render(window);
 
