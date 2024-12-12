@@ -5,3 +5,5 @@ build/
 .idea/
 CMakeSettings.json
 Makefile
+resources/Knight/idle_debug.png
+resources/Knight/idle.png
