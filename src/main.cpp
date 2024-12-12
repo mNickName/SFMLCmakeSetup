@@ -2,18 +2,19 @@
 
 #include <iostream>
 
+#include "ImGuiManager.h"
 #include "Animation.h"
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(512, 512), "2DEngine", sf::Style::Close | sf::Style::Resize);
-
-	sf::RectangleShape debug(sf::Vector2f(20.0f, 20.0f));
+	sf::RenderWindow window(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "2DEngine", sf::Style::Close | sf::Style::Resize | sf::Style::Fullscreen);
+	
+	sf::RectangleShape debug(sf::Vector2f(32.0f, 32.0f));
 	debug.setPosition(256, 256);
 	debug.setFillColor(sf::Color::Black);
 	debug.setOutlineColor(sf::Color::White);
 	debug.setOutlineThickness(2.0f);
 
-	sf::RectangleShape player(sf::Vector2f(100.0f, 150.0f));
+	sf::RectangleShape player(sf::Vector2f(32.0f, 32.0f));
 	player.setPosition(256, 256);
 
 	sf::Texture playerTexture;
@@ -25,11 +26,23 @@ int main() {
 	float deltaTime = 0.0f;
 	sf::Clock clock;
 
+#pragma region ImGui
+	ImGuiManager& gui = ImGuiManager::getInstance();
+	gui.initialize(window);
+#pragma endregion
+
+
 	while (window.isOpen()) {
-		deltaTime = clock.restart().asSeconds();
+		sf::Time deltaRestart = clock.restart();
+		deltaTime = deltaRestart.asSeconds();
+
+		float framesPerSecond = 1.0f / deltaTime;
+		gui.fps = framesPerSecond;
 
 		sf::Event poolEvent;
 		while (window.pollEvent(poolEvent)) {
+			gui.ProccessEvent(window, poolEvent);
+
 			switch (poolEvent.type) {
 			case sf::Event::Closed:
 				printf("\nWindow Closing");
@@ -45,14 +58,21 @@ int main() {
 			}
 		}
 
+		gui.update(window, deltaRestart);
+
 		animation.Update(0, deltaTime);
 		player.setTextureRect(animation.uvRect);
 
 		window.clear();
 		window.draw(debug);
 		window.draw(player);
+
+		gui.DrawMainWindow(window);
+		gui.render(window);
+
 		window.display();
 	}
 
+	gui.shutdown();
 	return 0;
 }

@@ -64,7 +64,7 @@ else()
 
 endif()
 
-target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${MY_SOURCES}  "src/Animation.cpp" "include/Animation.h" "src/Logger.cpp" "include/Logger.h")
+target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${MY_SOURCES}  "src/Animation.cpp" "include/Animation.h" "src/Logger.cpp" "include/Logger.h" "src/ImGuiManager.cpp" "include/ImGuiManager.h")
 
 
 if(MSVC) # If using the VS compiler...

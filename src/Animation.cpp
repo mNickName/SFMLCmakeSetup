@@ -40,5 +40,5 @@ void Animation::Update(int row, float deltaTime)
 	uvRect.left = currentImage.x * uvRect.width;
 	uvRect.top = currentImage.y * uvRect.height;
 
-	log.Log("uvRect.left: " + std::to_string(uvRect.left) + "uvRect.top: " + std::to_string(uvRect.top) + "\n", Logger::Level::DEBUG);
+	//log.Log("uvRect.left: " + std::to_string(uvRect.left) + "uvRect.top: " + std::to_string(uvRect.top) + "\n", Logger::Level::DEBUG);
 }
